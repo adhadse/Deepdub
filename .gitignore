@@ -1,1 +1,10 @@
 ./ipynb_checkpoints
+__pycache__
+.idea
+*/*/*/__pycache__/
+*/*/__pycache__/
+*/__pycache__/
+*.mp3
+*.mp4
+*.srt
+output_dir
