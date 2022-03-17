@@ -44,13 +44,9 @@ class DeepdubSentence:
     subs_df.dropna(inplace=True)
     return subs_df
 
-  def get_sentences(self, hashed=True):
+  def get_sentences(self):
     """
     Return preprocessed sentences of given a subtitle file.
-    ### Parameters:
-    - `hashed` (bool, default is True): if true return hash of
-    starting and ending time as index,
-    otherwise use starting and ending time as index
     """
     sentence = ""
     result = []
@@ -68,12 +64,6 @@ class DeepdubSentence:
     sentence_df["start"] = pd.to_datetime(sentence_df["start"], format="%H:%M:%S,%f")
     sentence_df["end"] = pd.to_datetime(sentence_df["end"], format="%H:%M:%S,%f")
     sentence_df["hash"] = pd.util.hash_pandas_object(sentence_df[["start", "end"]], index=False)
-
-    if hashed:
-      sentence_df.set_index(["hash"], inplace=True)
-    else:
-      sentence_df.set_index(["start", "end"], inplace=True)
-
     return sentence_df
 
   def save_subs(self, path_to_file):

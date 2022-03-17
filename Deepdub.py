@@ -28,7 +28,7 @@ class Deepdub:
     deep_s = DeepdubSentence(subtitle_path=self.subtitle_path,
                              slice_from=self.slice_from,
                              slice_to=self.slice_to)
-    sentence_df = deep_s.get_sentences(hashed=True)
+    sentence_df = deep_s.get_sentences()
     
     # Step 2: Create audio clips
     deep_a = DeepdubAudio(project_name=self.project_name,
