@@ -4,7 +4,7 @@ A complete end-to-end Deep Learning system to generate high quality human like s
 ---
 Uses [Spleeter](https://github.com/deezer/spleeter) for vocal and accompaniment separation.
 
-```
+```BibTeX
 @article{spleeter2020,
   doi = {10.21105/joss.02154},
   url = {https://doi.org/10.21105/joss.02154},
