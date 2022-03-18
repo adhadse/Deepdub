@@ -57,7 +57,7 @@ class Deepdub:
                              slice_from=self.slice_from,
                              slice_to=self.slice_to)
     sentence_df = deep_s.get_sentences()
-    subs_path = deep_s.save_subs()
+    gen_subs_path = deep_s.save_subs()
     
     # Step 2: Create audio clips and generate vocals and 
     # accompaniments
@@ -67,7 +67,13 @@ class Deepdub:
     deep_a.create_audio_segments()
     deep_a.extract_vocal_and_accompaniments()
     
-    return merge_video_audio(clipped_video, clipped_audio), subs_path
+    # Step 5: Mix generated vocals with extracted accompaniments
+    # Concatenate genrated audio segments
+    # and create final generated video clip
+    deep_a.mix_generated_vocals_and_accompaniments()
+    generated_audio_path = deep_a.concatenate_generated_audio_segments()
+    gen_clip_path = merge_video_audio(clipped_video, generated_audio_path)
+    return gen_clip_path, gen_subs_path
 
   def create_sample_clip_and_audio(self, video_file, slice_from, slice_to):
     """

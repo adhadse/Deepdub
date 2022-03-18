@@ -92,6 +92,8 @@ class DeepdubAudio():
     return generated_audio_path
   
   def extract_vocal_and_accompaniments(self):
+    """Generates vocals and accompaniments
+    using `sentence_df`; generating only for audio where sentence exist"""
     separator = Separator('spleeter:2stems')
     for sentence_audio in (
       f'{self.AUDIO_OUTPUT_DIR}/{str(row.hash)}.mp3'
@@ -103,6 +105,11 @@ class DeepdubAudio():
                                  filename_format='{filename}_{instrument}.{codec}',
                                  bitrate='320k')
     separator.join()
+
+  def mix_generated_vocals_and_accompaniments(self):
+    """TODO
+    """
+    pass
 
   def __timestamp_to_seconds(self, timestamp):
     """Convert Pandas timestamp object to float seconds with decimal
