@@ -24,11 +24,19 @@ class DeepdubSentence:
 
     # Slice subtitles and zero-centering
     if (slice_from is not None) and (slice_to is not None):
-      start_after = {"min": int(slice_from.split("_")[0]), "sec": int(slice_from.split("_")[1])}
-      ends_before = {"min": int(slice_to.split("_")[0]),  "sec": int(slice_to.split("_")[1])}
+      start_after = {
+        "min": int(slice_from.split("_")[0]),
+        "sec": int(slice_from.split("_")[1])}
+      ends_before = {
+        "min": int(slice_to.split("_")[0]),
+        "sec": int(slice_to.split("_")[1])}
       self.subs = self.subs.slice(
-        starts_after={'minutes': start_after["min"], 'seconds': start_after["sec"]},
-        ends_before={'minutes': ends_before["min"],  'seconds': ends_before["sec"]})
+        starts_after={
+          'minutes': start_after["min"],
+          'seconds': start_after["sec"]},
+        ends_before={
+          'minutes': ends_before["min"],
+          'seconds': ends_before["sec"]})
       self.subs.shift(
         minutes=-start_after["min"],
         seconds=-start_after["sec"])
@@ -46,8 +54,10 @@ class DeepdubSentence:
                             for sub in self.subs],
                            columns=["start", "end", "text"])
 
-    # Replace anything inside () with '' and if whole row is '' replace with NaN and drop them
-    subs_df[["text"]] = subs_df[["text"]].applymap(lambda text: re.sub("\\((.*)\\)", "", text)).replace("", np.nan)
+    # Replace anything inside () with '' 
+    # and if whole row is '' replace with NaN and drop them
+    subs_df[["text"]] = subs_df[["text"]].applymap(
+      lambda text: re.sub("\\((.*)\\)", "", text)).replace("", np.nan)
     subs_df.dropna(inplace=True)
     return subs_df
 
@@ -70,7 +80,8 @@ class DeepdubSentence:
     sentence_df = pd.DataFrame(result, columns=["start", "end", "sentence"])
     sentence_df["start"] = pd.to_datetime(sentence_df["start"], format="%H:%M:%S,%f")
     sentence_df["end"] = pd.to_datetime(sentence_df["end"], format="%H:%M:%S,%f")
-    sentence_df["hash"] = pd.util.hash_pandas_object(sentence_df[["start", "end"]], index=False)
+    sentence_df["hash"] = pd.util.hash_pandas_object(
+      sentence_df[["start", "end"]], index=False)
     return sentence_df
 
   def save_subs(self):
