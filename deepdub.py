@@ -48,7 +48,7 @@ class Deepdub:
     - `gen_clip_path`: Generated Clip path
     - `gen_subs_path`: Generated subtitles path"""
     if clipped_audio is None:
-      clipped_audio = f'{self.OUTPUT_DIR}/audio.mp3'
+      clipped_audio = f'{self.OUTPUT_DIR}/audio.wav'
       ffmpeg_extract_audio(clipped_video, clipped_audio)
       
     # Step 1: Generate sentences and subs
@@ -91,8 +91,8 @@ class Deepdub:
     """
     Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
-    clipped_video = f'{self.OUTPUT_DIR}/clip.mp4'
-    clipped_audio = f'{self.OUTPUT_DIR}/audio.mp3'
+    clipped_video = f'{self.OUTPUT_DIR}/clip.mkv'
+    clipped_audio = f'{self.OUTPUT_DIR}/audio.wav'
 
     ffmpeg_extract_subclip(video_file,
                            self.__to_sec(slice_from), self.__to_sec(slice_to),
@@ -102,7 +102,7 @@ class Deepdub:
 
   def merge_video_audio(self, clipped_video, output_audio):
     """Merges video """
-    video_no_sound = f'{self.OUTPUT_DIR}/clip_no_sound.mp4'
+    video_no_sound = f'{self.OUTPUT_DIR}/clip_no_sound.mkv'
     cmd = [get_setting("FFMPEG_BINARY"), "-y",
            "-i", clipped_video, 
            "-an",
@@ -110,7 +110,7 @@ class Deepdub:
            video_no_sound]
     subprocess_call(cmd)
 
-    gen_clip_path = f'{self.OUTPUT_DIR}/clip_gen.mp4'
+    gen_clip_path = f'{self.OUTPUT_DIR}/clip_gen.mkv'
     ffmpeg_merge_video_audio(video_no_sound, output_audio, gen_clip_path)
     os.remove(video_no_sound)
     return gen_clip_path
