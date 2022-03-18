@@ -10,36 +10,69 @@ from moviepy.video.io.ffmpeg_tools import ffmpeg_merge_video_audio
 
 
 class Deepdub:
-  def __init__(self, 
-               project_name, 
-               subtitle_path,
-               slice_from, slice_to):
-    """TODO
+  def __init__(self,
+               slice_from, slice_to,
+               project_name=None):
+    """Deepdub
+    Deepdub a given video.
+    General pattern to work:
+    1. Initialize this class.
+    2. Get project dir using `get_project_dir()`
+    3. Save video and subtitle (complete) in project dir.
+    4. Call `deepdub(video_path, subs_path)
+    ### Parameters:
+    - `slice_from`: string formatted as `minute_seconds` to set
+       where to clip subs from
+    - `slice_to`: string formatted as `minute_seconds` to set
+       until where subs need to be clipped to.
+    - `project_name` (optional): a project name you might want to give
     """
-    self.project_name = project_name + str(uuid.uuid4())
+    if project_name is None:
+      self.project_name = str(uuid.uuid4())
+    else:
+      self.project_name = f'{project_name}_{str(uuid.uuid4())}'
     self.OUTPUT_DIR = f'./output_dir/{project_name}'
-    self.subtitle_path = subtitle_path
     self.slice_from = slice_from
     self.slice_to = slice_to
+    Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
-  def deepdub(self, clipped_video, clipped_audio):
-    """TODO"""
-    # Step 1: Generate sentences
-    deep_s = DeepdubSentence(subtitle_path=self.subtitle_path,
+  def deepdub(self, clipped_video, subtitle_path,
+              clipped_audio=None):
+    """Deepdubs a given video
+    ### Parameters:
+    - `clipped_video: Path to clipped video
+    - `subtitle_path`: Path to complete subtitles (not expected to clipped)
+       unlike `clipped_video`
+    - `clipped_audio` (not required)(default: None): Path to clipped audio
+    ### Returns:
+    - `gen_clip_path`: Generated Clip path
+    - `gen_subs_path`: Generated subtitles path"""
+    if clipped_audio is None:
+      clipped_audio = f'{self.OUTPUT_DIR}/audio.mp3'
+      ffmpeg_extract_audio(clipped_video, clipped_audio)
+      
+    # Step 1: Generate sentences and subs
+    deep_s = DeepdubSentence(project_name=self.project_name,
+                             subtitle_path=subtitle_path,
                              slice_from=self.slice_from,
                              slice_to=self.slice_to)
     sentence_df = deep_s.get_sentences()
+    subs_path = deep_s.save_subs()
     
-    # Step 2: Create audio clips
+    # Step 2: Create audio clips and generate vocals and 
+    # accompaniments
     deep_a = DeepdubAudio(project_name=self.project_name,
                           sentence_df=sentence_df,
                           audio_path=clipped_audio)
     deep_a.create_audio_segments()
+    deep_a.extract_vocal_and_accompaniments()
     
-    
+    return merge_video_audio(clipped_video, clipped_audio), subs_path
+
   def create_sample_clip_and_audio(self, video_file, slice_from, slice_to):
     """
-    Create Sample video and audio file from `video_file`
+    Create Sample video and audio file from `video_file`.
+    **WARNING**: Don't use in production, as `video_file` will be huge to store.
     ### Parameters:
     - `video_file`: path to video file
     - `slice_from`: string formatted as `min_sec` or `h_min_sec`
@@ -53,9 +86,9 @@ class Deepdub:
     Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
     clipped_video = f'{self.OUTPUT_DIR}/clip.mp4'
-    clipped_audio = f'{self.OUTPUT_DIR}/clip.mp3'
+    clipped_audio = f'{self.OUTPUT_DIR}/audio.mp3'
 
-    ffmpeg_extract_subclip(self.video_file,
+    ffmpeg_extract_subclip(video_file,
                            self.__to_sec(slice_from), self.__to_sec(slice_to),
                            targetname=clipped_video)
     ffmpeg_extract_audio(clipped_video, clipped_audio)
@@ -76,11 +109,14 @@ class Deepdub:
     os.remove(video_no_sound)
     return gen_clip_path
 
+  def get_project_dir(self):
+    return self.OUTPUT_DIR
+
   def play_audio(path):
     return display.display(display.Audio(path))
 
   def play_video(path):
-    display.display(display.Video(path))
+    return display.display(display.Video(path))
 
   def __to_sec(self, min_sec):
     """Convert a string formatted as `min_sec` or `h_min_sec`

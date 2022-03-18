@@ -2,7 +2,7 @@
 A complete end-to-end Deep Learning system to generate high quality human like speech in English for Korean Drama. (WIP)
 
 ---
-Uses [Spleeter](https://github.com/deezer/spleeter) for vocal and accompaniment separation.
+This project uses [Spleeter](https://github.com/deezer/spleeter) for vocal and accompaniment separation.
 
 ```BibTeX
 @article{spleeter2020,

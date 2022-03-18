@@ -5,15 +5,17 @@ import numpy as np
 
 
 class DeepdubSentence:
-  def __init__(self, subtitle_path, slice_from=None, slice_to=None):
+  def __init__(self, project_name, subtitle_path, slice_from=None, slice_to=None):
     """Create sentences out of sub file
     Parameters:
-      - `file`: input path to subtitle file
+      - `project_name`: a project name you might want to give
+      - `subtitle_path`: Path to complete subtitles
       - `slice_from` (default None): string formatted as `minute_seconds` to set
          where to clip subs from
       - `slice_to` (default None): string formatted as `minute_seconds` to set
          until where subs need to be clipped to.
     """
+    self.SUBS_OUTPUT_PATH = f'./output_dir/{project_name}/subs_gen.srt'
     self.subs = pysrt.open(subtitle_path)
 
     # Slice subtitles and zero-centering
@@ -66,5 +68,6 @@ class DeepdubSentence:
     sentence_df["hash"] = pd.util.hash_pandas_object(sentence_df[["start", "end"]], index=False)
     return sentence_df
 
-  def save_subs(self, path_to_file):
-    self.subs.save(path_to_file, encoding='utf-8')
+  def save_subs(self):
+    self.subs.save(self.SUBS_OUTPUT_PATH, encoding='utf-8')
+    return self.SUBS_OUTPUT_PATH

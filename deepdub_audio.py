@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from moviepy.editor import AudioFileClip
 from moviepy.config import get_setting
 from moviepy.tools import subprocess_call
-from pyffmpeg import FFprobe
 
 from spleeter.separator import Separator
 from spleeter.audio import Codec
@@ -28,7 +28,7 @@ class DeepdubAudio():
     # they are accompaniment; in whole `audio_path` file.
     # sentence_df only has info where they sentences are spoken,
     # we need to add range were accompaniment exist.
-    vals = sentence_df[['start', 'end']].stack().unique()
+    vals = self.sentence_df[['start', 'end']].stack().unique()
     vals2 = np.concatenate([np.array([0], dtype=vals.dtype), vals])
     self.audio_df = pd.DataFrame(zip(vals2, vals), columns=['start', 'end'])
 
@@ -37,7 +37,8 @@ class DeepdubAudio():
     self.audio_df = pd.concat([
       self.audio_df, pd.DataFrame({
         "start": [self.audio_df.iloc[-1].end],
-        "end": [pd.to_datetime(FFprobe(self.audio_path).duration, format="%H:%M:%S.%f")]
+        "end": [pd.to_datetime(str(
+          AudioFileClip(self.audio_path).duration), format="%S.%f")]
       })], ignore_index=True, axis=0)
     
     # Add `hash` of `start` and `end` timestamp to uniquely identify
@@ -74,7 +75,7 @@ class DeepdubAudio():
            "-ar", "%d" % fps, output]
     subprocess_call(cmd)
 
-  def concatenate_audio_segments(self):
+  def concatenate_generated_audio_segments(self):
     """Concatenate audio segments using `audio_segments_list.txt`
     to generate `audio_gen.mp3`
     ### Returns:
@@ -90,12 +91,13 @@ class DeepdubAudio():
     subprocess_call(cmd)
     return generated_audio_path
   
-  def extract_vocal_and_accompaniment(self):
+  def extract_vocal_and_accompaniments(self):
     separator = Separator('spleeter:2stems')
     for sentence_audio in (
-      f'{self.AUDIO_OUTPUT_DIR}/{str(row.hash)}.mp3' for i, row in sentence_df.iterrows()):
+      f'{self.AUDIO_OUTPUT_DIR}/{str(row.hash)}.mp3'
+      for i, row in self.sentence_df.reset_index().iterrows()):
       separator.separate_to_file(audio_descriptor=sentence_audio,
-                                 destination=AUDIO_OUTPUT_DIR,
+                                 destination=self.AUDIO_OUTPUT_DIR,
                                  synchronous=False,
                                  codec=Codec.MP3,
                                  filename_format='{filename}_{instrument}.{codec}',
