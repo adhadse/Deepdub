@@ -5,7 +5,8 @@ import numpy as np
 
 
 class DeepdubSentence:
-  def __init__(self, project_name, subtitle_path, slice_from=None, slice_to=None):
+  def __init__(self, project_name, subtitle_path,
+               slice_from=None, slice_to=None, shift=None):
     """Create sentences out of sub file
     Parameters:
       - `project_name`: a project name you might want to give
@@ -14,6 +15,9 @@ class DeepdubSentence:
          where to clip subs from
       - `slice_to` (default None): string formatted as `minute_seconds` to set
          until where subs need to be clipped to.
+      - `shift` (default None): a dictionary with shift values for keys in 
+         (hours, minutes, seconds, milliseconds, ratio) negative values for
+         reverse shift otherwise forward
     """
     self.SUBS_OUTPUT_PATH = f'./output_dir/{project_name}/subs_gen.srt'
     self.subs = pysrt.open(subtitle_path)
@@ -28,6 +32,7 @@ class DeepdubSentence:
       self.subs.shift(
         minutes=-start_after["min"],
         seconds=-start_after["sec"])
+    self.subs.shift(**shift)
 
   def __regex(self):
     """Replace using regex without writing regex expression"""

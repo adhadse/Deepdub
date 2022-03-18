@@ -37,13 +37,16 @@ class Deepdub:
     Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
   def deepdub(self, clipped_video, subtitle_path,
-              clipped_audio=None):
+              clipped_audio=None, shift=None):
     """Deepdubs a given video
     ### Parameters:
     - `clipped_video: Path to clipped video
     - `subtitle_path`: Path to complete subtitles (not expected to clipped)
        unlike `clipped_video`
     - `clipped_audio` (not required)(default: None): Path to clipped audio
+    - `shift` (default None): a dictionary with shift values for keys in 
+       (hours, minutes, seconds, milliseconds, ratio) negative values for
+       reverse shift otherwise forward
     ### Returns:
     - `gen_clip_path`: Generated Clip path
     - `gen_subs_path`: Generated subtitles path"""
@@ -55,7 +58,8 @@ class Deepdub:
     deep_s = DeepdubSentence(project_name=self.project_name,
                              subtitle_path=subtitle_path,
                              slice_from=self.slice_from,
-                             slice_to=self.slice_to)
+                             slice_to=self.slice_to,
+                             shift=shift)
     sentence_df = deep_s.get_sentences()
     gen_subs_path = deep_s.save_subs()
     
