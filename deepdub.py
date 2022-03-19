@@ -1,5 +1,6 @@
 from deepdub_sentence import DeepdubSentence
 from deepdub_audio import DeepdubAudio
+from deepdub_clusterer import DeepdubClusterer
 import os
 import uuid
 from pathlib import Path
@@ -37,12 +38,14 @@ class Deepdub:
     Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
   def deepdub(self, clipped_video, subtitle_path,
+              n_speakers,
               clipped_audio=None, shift=None):
     """Deepdubs a given video
     ### Parameters:
     - `clipped_video: Path to clipped video
     - `subtitle_path`: Path to complete subtitles (not expected to clipped)
        unlike `clipped_video`
+    - `n_speakers`: Number of speakers in provided clip
     - `clipped_audio` (not required)(default: None): Path to clipped audio
     - `shift` (default None): a dictionary with shift values for keys in 
        (hours, minutes, seconds, milliseconds, ratio) negative values for
@@ -70,6 +73,13 @@ class Deepdub:
                           audio_path=clipped_audio)
     deep_a.create_audio_segments()
     deep_a.extract_vocal_and_accompaniments()
+    
+    # Step 3: Generate Embeddings for vocals and cluster them
+    # to identify speakers.
+    deep_c = DeepdubClusterer(project_name=self.project_name,
+                              sentence_df=sentence_df)
+    sentence_df = deep_c.get_embeddings()
+    deep_c.cluster(n)
     
     # Step 5: Mix generated vocals with extracted accompaniments
     # Concatenate genrated audio segments
