@@ -37,8 +37,8 @@ class DeepdubAudio():
     self.audio_df = pd.concat([
       self.audio_df, pd.DataFrame({
         "start": [self.audio_df.iloc[-1].end],
-        "end": [pd.to_datetime(str(
-          AudioFileClip(self.audio_path).duration), format="%S.%f")]
+        "end": [pd.to_datetime(
+          AudioFileClip(self.audio_path).duration, unit='s')]
       })], ignore_index=True, axis=0)
     
     # Add `hash` of `start` and `end` timestamp to uniquely identify
@@ -113,4 +113,6 @@ class DeepdubAudio():
   def __timestamp_to_seconds(self, timestamp):
     """Convert Pandas timestamp object to float seconds with decimal
        part representing milliseconds"""
-    return timestamp.hour + timestamp.second + timestamp.microsecond/1000000
+    return (timestamp.hour * 3600 ) + (
+      timestamp.minute * 60) + (
+      timestamp.second + timestamp.microsecond/1000000)
