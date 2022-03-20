@@ -8,4 +8,5 @@ __pycache__
 *.mp4
 *.srt
 output_dir
-pretrained_models
+pretrained_models/*
+!pretrained_models/.gitkeep

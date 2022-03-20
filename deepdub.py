@@ -76,10 +76,11 @@ class Deepdub:
     
     # Step 3: Generate Embeddings for vocals and cluster them
     # to identify speakers.
+    # Edit `labels` column in sentence_df after this step if they are wrong
     deep_c = DeepdubClusterer(project_name=self.project_name,
                               sentence_df=sentence_df)
     sentence_df = deep_c.get_embeddings()
-    deep_c.cluster(n)
+    sentence_df, kmeans = deep_c.cluster(n_speakers)
     
     # Step 5: Mix generated vocals with extracted accompaniments
     # Concatenate genrated audio segments
