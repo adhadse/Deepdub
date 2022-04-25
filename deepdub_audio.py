@@ -13,12 +13,12 @@ class DeepdubAudio():
   def __init__(self, project_name, sentence_df, audio_path):
     """
     Manages audio for Deepdub.
-    - `audio_df` will contains information required to clip audio,
+    - audio_df will contains information required to clip audio,
       including parts where sentences are spoken and where they are not.
     ### Parameters:
-    - `project_name`: name for which you want to deepdub
-    - `sentence_df`: a `DeepdubSentences.get_sentences()` instance
-    - `audio_path`: path to extracted audio of clipped video
+    - project_name: name for which you want to deepdub
+    - sentence_df: a `DeepdubSentences.get_sentences()` instance
+    - audio_path: path to extracted audio of clipped video
     """
     self.sentence_df = sentence_df.reset_index().set_index(["hash"])
     self.audio_path = audio_path
@@ -79,7 +79,7 @@ class DeepdubAudio():
     """Concatenate audio segments using `audio_segments_list.txt`
     to generate `audio_gen.wav`
     ### Returns:
-    - `generated_audio_path`
+    - generated_audio_path
     """
     generated_audio_path = f'{self.AUDIO_OUTPUT_DIR}/audio_gen.wav'
     cmd = [get_setting("FFMPEG_BINARY"), "-y",

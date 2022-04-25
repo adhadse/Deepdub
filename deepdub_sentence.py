@@ -9,15 +9,15 @@ class DeepdubSentence:
                **kwargs):
     """Create sentences out of sub file
     Parameters:
-      - `project_name`: a project name you might want to give
-      - `subtitle_path`: Path to complete subtitles
-      - `slice_from` (optional): string formatted as `minute_seconds` to set
-         where to clip subs from
-      - `slice_to` (optional): string formatted as `minute_seconds` to set
-         until where subs need to be clipped to.
-      - `shift` (optional): a dictionary with shift values for keys in 
-         (hours, minutes, seconds, milliseconds, ratio) negative values for
-         reverse shift otherwise forward
+      - project_name: a project name you might want to give
+      - subtitle_path`: Path to complete subtitles
+      - slice_from (optional): string formatted as `minute_seconds` to set
+        where to clip subs from
+      - slice_to (optional): string formatted as `minute_seconds` to set
+        until where subs need to be clipped to.
+      - shift (optional): a dictionary with shift values for keys in 
+        (hours, minutes, seconds, milliseconds, ratio) negative values for
+        reverse shift otherwise forward
     """
     self.SUBS_OUTPUT_PATH = f'./output_dir/{project_name}/subs_gen.srt'
     self.subs = pysrt.open(subtitle_path)

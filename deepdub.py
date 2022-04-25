@@ -22,11 +22,11 @@ class Deepdub:
     3. Save video and subtitle (complete) in project dir.
     4. Call `deepdub(video_path, subs_path)
     ### Parameters:
-    - `slice_from`: string formatted as `minute_seconds` to set
-       where to clip subs from
-    - `slice_to`: string formatted as `minute_seconds` to set
-       until where subs need to be clipped to.
-    - `project_name` (optional): a project name you might want to give
+    - slice_from: string formatted as `minute_seconds` to set
+      where to clip subs from
+    - slice_to: string formatted as `minute_seconds` to set
+      until where subs need to be clipped to.
+    - project_name (optional): a project name you might want to give
     """
     if project_name is None:
       self.project_name = str(uuid.uuid4())
@@ -42,17 +42,17 @@ class Deepdub:
               clipped_audio=None, shift=None):
     """Deepdubs a given video
     ### Parameters:
-    - `clipped_video: Path to clipped video
-    - `subtitle_path`: Path to complete subtitles (not expected to clipped)
-       unlike `clipped_video`
-    - `n_speakers`: Number of speakers in provided clip
-    - `clipped_audio` (not required)(default: None): Path to clipped audio
-    - `shift` (default None): a dictionary with shift values for keys in 
-       (hours, minutes, seconds, milliseconds, ratio) negative values for
-       reverse shift otherwise forward
+    - clipped_video: Path to clipped video
+    - subtitle_path: Path to complete subtitles (not expected to clipped)
+      unlike `clipped_video`
+    - n_speakers: Number of speakers in provided clip
+    - clipped_audio (not required)(default: None): Path to clipped audio
+    - shift (default None): a dictionary with shift values for keys in 
+      (hours, minutes, seconds, milliseconds, ratio) negative values for
+      reverse shift otherwise forward
     ### Returns:
-    - `gen_clip_path`: Generated Clip path
-    - `gen_subs_path`: Generated subtitles path"""
+    - gen_clip_path: Generated Clip path
+    - gen_subs_path: Generated subtitles path"""
     if clipped_audio is None:
       clipped_audio = f'{self.OUTPUT_DIR}/audio.wav'
       ffmpeg_extract_audio(clipped_video, clipped_audio)
@@ -95,14 +95,14 @@ class Deepdub:
     Create Sample video and audio file from `video_file`.
     **WARNING**: Don't use in production, as `video_file` will be huge to store.
     ### Parameters:
-    - `video_file`: path to video file
-    - `slice_from`: string formatted as `min_sec` or `h_min_sec`
+    - video_file: path to video file
+    - slice_from: string formatted as `min_sec` or `h_min_sec`
     indicating where to begin slicing
-    - `slice_to`: string formatted as `min_sec` or `h_min_sec`
+    - slice_to: string formatted as `min_sec` or `h_min_sec`
     indicating where to end slicing
     ### Returns:
-    - `clipped_video`: path to clipped video
-    - `clipped_audio`: path to clipped audio
+    - clipped_video: path to clipped video
+    - clipped_audio: path to clipped audio
     """
     Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 

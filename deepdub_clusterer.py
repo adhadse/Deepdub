@@ -32,7 +32,7 @@ class DeepdubClusterer():
     Applies embedding generating function for vocal audio files.
     Saves in `embedding` column and returns generated DataFrame
     ### Returns:
-    - `sentence_df`: generated sentence_df with `embedding` column
+    - sentence_df: generated sentence_df with `embedding` column
     """
     self.sentence_df[["embedding"]] = self.sentence_df[["hash"]].applymap(
       self.__generate_embedding)
@@ -53,11 +53,11 @@ class DeepdubClusterer():
     Cluster generated embeddings to label them with one particular speaker
     in `label` column. 
     ### Parameters:
-    - `n_cluster`: number of cluster/speakers speaking in the clip
-    - `random_state` (optional): set random state for kmeans
+    - n_cluster: number of cluster/speakers speaking in the clip
+    - random_state (optional): set random state for kmeans
     ### Returns:
-    - `sentence_df`: generated sentence_df with `label` column
-    - `kmeans`: scikit-learn kmeans object
+    - sentence_df: generated sentence_df with `label` column
+    - kmeans: scikit-learn kmeans object
     """
     embeddings = np.array(self.sentence_df["embedding"].tolist())
     kmeans = KMeans(n_clusters=n_clusters,
