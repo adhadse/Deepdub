@@ -1,12 +1,12 @@
 # Deepdub
 A complete end-to-end Deep Learning system to generate high quality human like speech in English for Korean Drama. (WIP)
 
+# Status
+Check [Projects](https://github.com/adhadse/Deepdub/projects/4).
+
 # What am I doing here?
 There are various steps, I came up with
 ![Overview Deepdub](/res/images/deepdub_overview.png)
-
-# Status
-Check [Projects](https://github.com/adhadse/Deepdub/projects/4).
 
 ### [Step 0](https://github.com/adhadse/Deepdub/blob/master/0_Sentence_generation_from_Subtitles.ipynb): Preprocessing subtitles to get sentences
 The relies heavily on Subtitles for the dubbing procedure to work, i.e., the subs should match the intended audio in the video file. 
@@ -24,9 +24,11 @@ We don't know who spoke a particular audio segment just from subtitles. We need 
 ### Step 4: Voice Reproduction
 We already know which audio segment is spoken by which speaker in previous step. We can use these speech segments for that particular speaker for voice adaptation, generating speech (`<hash>_gen.wav`) using a TTS (Text-To-Speech) model and preprocessed subs (sentences). 
 
-### [Step 5](https://github.com/adhadse/Deepdub/blob/master/deepdub_audio.py#L78-L92): Accompaniments Overlay and Concatenation of audio segments.
+### [Step 5](https://github.com/adhadse/Deepdub/blob/master/deepdub/deepdub_audio.py#L93-L107): Accompaniments Overlay and Concatenation of audio segments.
 The generated speech (`<hash>.wav`) is overlayed with accompaniments (`<hash>_accompaniments.wav`) to get `<hash>_gen.wav`. This ensures that we have speech in intended language + sound effects are preserved. At last we use `audio_segments_list.txt` to concatenate back the audio segments and produce the final output audio.
 
+# Want to Contribute?
+Look into [issues](https://github.com/adhadse/Deepdub/issues). You can begin with issue tagged `good first issue` or if you want to suggest something else, open a new issue.
 
 ---
 1. This project uses [Spleeter](https://github.com/deezer/spleeter) for source separation.

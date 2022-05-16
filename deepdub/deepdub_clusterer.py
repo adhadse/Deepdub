@@ -1,3 +1,17 @@
+# Copyright 2022 The Deepdub Authors. All Rights Reserved.
+# This file is part of Deepdub.
+#
+# Deepdub is free software: you can redistribute it and/or modify it under the terms of
+# the GNU General Public License as published by the Free Software Foundation, either
+# version 2 of the License, or (at your option) any later version.
+#
+# Deepdub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+# PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with Deepdub.
+# If not, see <https://www.gnu.org/licenses/>.
+
 import random
 import numpy as np
 from deep_speaker.audio import read_mfcc
@@ -12,7 +26,7 @@ import pandas as pd
 np.random.seed(123)
 random.seed(123)
 
-class DeepdubClusterer():
+class DeepdubClusterer:
   """This Class is used for speaker diarization of audio segments.
   
   The idea to generate embeddings of audio segments of utterances by all 
@@ -33,7 +47,7 @@ class DeepdubClusterer():
     self.AUDIO_OUTPUT_DIR = f'./output_dir/{project_name}/audio_segments'
     self.sentence_df = sentence_df
     if model_path is not None:
-      self.model.m.load_weights(MODEL_PATH, by_name=True)
+      self.model.m.load_weights(model_path, by_name=True)
     else:
       self.model.m.load_weights(
         './pretrained_models/ResCNN_triplet_training_checkpoint_265.h5',
