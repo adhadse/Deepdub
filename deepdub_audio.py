@@ -10,16 +10,16 @@ from spleeter.audio import Codec
 
 
 class DeepdubAudio():
+   """Manages audio for Deepdub.
+     
+    This class maintains `audio_df` which contains information required to clip audio,
+    including parts where sentences are spoken and where they are not.
+    Args:
+      project_name: name for which you want to deepdub
+      sentence_df: a `DeepdubSentences.get_sentences()` instance
+      audio_path: path to extracted audio of clipped video
+    """
   def __init__(self, project_name, sentence_df, audio_path):
-    """
-    Manages audio for Deepdub.
-    - audio_df will contains information required to clip audio,
-      including parts where sentences are spoken and where they are not.
-    ### Parameters:
-    - project_name: name for which you want to deepdub
-    - sentence_df: a `DeepdubSentences.get_sentences()` instance
-    - audio_path: path to extracted audio of clipped video
-    """
     self.sentence_df = sentence_df.reset_index().set_index(["hash"])
     self.audio_path = audio_path
     self.AUDIO_OUTPUT_DIR = f'./output_dir/{project_name}/audio_segments'
