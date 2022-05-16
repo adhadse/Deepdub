@@ -13,10 +13,22 @@ np.random.seed(123)
 random.seed(123)
 
 class DeepdubClusterer():
+  """This Class is used for speaker diarization of audio segments.
+  
+  The idea to generate embeddings of audio segments of utterances by all 
+  speakers and cluster these embeddings; thus identifying speakers and 
+  their utterances. 
+   
+  Args:
+    project_name: a project name you might want to give
+    sentence_df: pd.DataFrame object created by 
+      DeepdubSentence.get_sentences() method
+    model_path: optional path leading to where the model used 
+      generating embeddings is stored. 
+      If not declared requires `ResCNN_triplet_training_checkpoint_265.h5`
+      file stored in `pretrained_models` dir of base dir.
+  """
   def __init__(self, project_name, sentence_df, model_path=None):
-    """
-    TODO
-    """
     self.model = DeepSpeakerModel()
     self.AUDIO_OUTPUT_DIR = f'./output_dir/{project_name}/audio_segments'
     self.sentence_df = sentence_df
@@ -31,8 +43,9 @@ class DeepdubClusterer():
     """
     Applies embedding generating function for vocal audio files.
     Saves in `embedding` column and returns generated DataFrame
-    ### Returns:
-    - sentence_df: generated sentence_df with `embedding` column
+    
+    Returns:
+      sentence_df: generated sentence_df with `embedding` column
     """
     self.sentence_df[["embedding"]] = self.sentence_df[["hash"]].applymap(
       self.__generate_embedding)
@@ -52,12 +65,12 @@ class DeepdubClusterer():
     """
     Cluster generated embeddings to label them with one particular speaker
     in `label` column. 
-    ### Parameters:
-    - n_cluster: number of cluster/speakers speaking in the clip
-    - random_state (optional): set random state for kmeans
-    ### Returns:
-    - sentence_df: generated sentence_df with `label` column
-    - kmeans: scikit-learn kmeans object
+    Args:
+      n_cluster: number of cluster/speakers speaking in the clip
+      random_state (optional): set random state for kmeans
+    Returns:
+      sentence_df: generated sentence_df with `label` column
+      kmeans: scikit-learn kmeans object
     """
     embeddings = np.array(self.sentence_df["embedding"].tolist())
     kmeans = KMeans(n_clusters=n_clusters,
