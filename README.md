@@ -5,6 +5,9 @@ A complete end-to-end Deep Learning system to generate high quality human like s
 There are various steps, I came up with
 ![Overview Deepdub](/res/images/deepdub_overview.png)
 
+# Status
+Check [Projects](https://github.com/adhadse/Deepdub/projects/4).
+
 ### [Step 0](https://github.com/adhadse/Deepdub/blob/master/0_Sentence_generation_from_Subtitles.ipynb): Preprocessing subtitles to get sentences
 The relies heavily on Subtitles for the dubbing procedure to work, i.e., the subs should match the intended audio in the video file. 
 If they don't use `shift` parameter of `DeepdubSentence` constructor. These sentences (stored in `sentence_df`) are used to create audio segments in step 1.
@@ -16,9 +19,9 @@ The `sentence_df` can then be used to create audio segments, more than enough ac
 The background sound effects/accompaniments will behave as noise for our next step 3, (and possibly step 4). This problem is solved by using source separation technique (using *Spleeter*) spliting original audio containing a speech, into `<hash>_vocals.wav` and `<hash>_accopaniments.wav`. This step is performed only for the audio segments containing known speech (i.e., based on `sentence_df`), completely retaining background sound effects for audio segments which doensn't contain any speech.
 
 ### [Step 3](https://github.com/adhadse/Deepdub/blob/master/3_Clustering_audio_segments_for_speaker_diarization.ipynb): Clustering audio Segments for speaker Diarization
-We don't know who spoke a particular audio segment just from subtitles. We need to give labels to audio segments so that we can dub that particular audio segment into that particular speaker's voice. For this I have applied clustering to speaker embeddings of audio segments, creating labels. Check [this notebook with visualization](https://colab.research.google.com/drive/1ayeG_AL_RXvhiUoe0Me1q3TjqpIsrFjb?usp=sharing)
+We don't know who spoke a particular audio segment just from subtitles. We need to give labels to audio segments so that we can dub that particular audio segment into that particular speaker's voice. For this I have applied clustering to speaker embeddings of audio segments, creating labels. Check [this notebook with visualization](https://colab.research.google.com/drive/1ayeG_AL_RXvhiUoe0Me1q3TjqpIsrFjb?usp=sharing).
 
-### [Step 4]: Voice Reproduction
+### Step 4: Voice Reproduction
 We already know which audio segment is spoken by which speaker in previous step. We can use these speech segments for that particular speaker for voice adaptation, generating speech (`<hash>_gen.wav`) using a TTS (Text-To-Speech) model and preprocessed subs (sentences). 
 
 ### [Step 5](https://github.com/adhadse/Deepdub/blob/master/deepdub_audio.py#L78-L92): Accompaniments Overlay and Concatenation of audio segments.
